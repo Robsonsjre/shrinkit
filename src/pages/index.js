@@ -5,6 +5,7 @@ import Dropzone from 'react-dropzone';
 const Home = () => {
   const [file, setFile] = useState(null);
   const [chunks, setChunks] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleDrop = (receivedFile) => {
     console.log('handleDrop')
@@ -18,6 +19,7 @@ const Home = () => {
       return;
     }
 
+    setLoading(true);
     const formData = new FormData();
     formData.append("file", file, file.name);
     try {
@@ -29,6 +31,8 @@ const Home = () => {
       if (response.ok) {
         const data = await response.json();
         setChunks(data.shrunkenChunks)
+        setLoading(false);
+
       } else {
         const errorData = await response.json();
         console.error(errorData);
@@ -86,6 +90,9 @@ const Home = () => {
               >
                 Shrink it for me!
               </button>
+              {loading && (
+                <p className="mt-4 text-gray-700 text-lg">Loading, please wait...</p>
+)             }
             </div>
           )}
 

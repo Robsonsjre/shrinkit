@@ -7,7 +7,7 @@ const apiKey = process.env.NEXT_PUBLIC_CHATGPT_API_KEY
 const shrinkText = async function(inputText) {
   console.log('shrinkText function')
   try {
-    const promptMod = `Por favor, resuma o texto a seguir em pelo menos metade do tamanho: ${inputText}`
+    const promptMod = `Por favor, resuma o texto, dimiuindo seu tamanho, simplificando a linguagem jurídica. Leve em conta que ele é um pedaço de uma parte maior que pode ter sido cortada: ${inputText}`
 
     const params = {
       prompt: promptMod,
