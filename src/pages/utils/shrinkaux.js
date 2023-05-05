@@ -2,7 +2,7 @@ const axios = require('axios')
 
 // const openAI_URL = 'https://api.openai.com/v1/chat/completions'
 const openAI_URL = 'https://api.openai.com/v1/completions'
-const apiKey = process.env.NEXT_PUBLIC_CHATGPT_API_KEY
+const apiKey = process.env.CHATGPT_API_KEY
 
 const shrinkText = async function(inputText) {
   console.log('shrinkText function')
