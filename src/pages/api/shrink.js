@@ -1,5 +1,5 @@
-import processPDF from '../utils/process';
-import shrinkText from '../utils/shrinkaux';
+import processPDF from '../../utils/process';
+import shrinkText from '../../utils/shrinkaux';
 import multer from 'multer';
 
 const upload = multer({ storage: multer.memoryStorage() }).single('file');
