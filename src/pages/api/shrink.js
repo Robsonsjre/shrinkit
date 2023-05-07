@@ -43,20 +43,20 @@ export default async function handler(req, res) {
     const chunks = await processPDF(file);
 
     let shrunkenChunks = [];
-    // for (let i = 0; i < chunks.length; i++) {
-    //     const _chunk = chunks[i];
-    //     const shrunkenChunk = await shrinkText(_chunk);
-    //     shrunkenChunks.push(shrunkenChunk);
-    // }
-    shrunkenChunks = await Promise.all(
-      chunks.map(async (chunk) => {
-        try {
-          return await shrinkText(chunk);
-        } catch (error) {
-          console.error(error);
-        }
-      })
-    );
+    for (let i = 0; i < chunks.length; i++) {
+        const _chunk = chunks[i];
+        const shrunkenChunk = await shrinkText(_chunk);
+        shrunkenChunks.push(shrunkenChunk);
+    }
+    // shrunkenChunks = await Promise.all(
+    //   chunks.map(async (chunk) => {
+    //     try {
+    //       return await shrinkText(chunk);
+    //     } catch (error) {
+    //       console.error(error);
+    //     }
+    //   })
+    // );
 
     // Merge the chunks back into a single string and return it to the client
     // const shrunkenText = chunks.join(' ');
