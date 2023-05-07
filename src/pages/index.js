@@ -8,23 +8,34 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState('')
   const [inputMessage, setInputMessage] = useState('')
+  const [subscribeId, setSubscribeId] = useState('')
   const socketRef = useRef()
+
+  var rand = function() {
+    return Math.random().toString(36).substr(2); // remove `0.`
+  };
+
+  var token = function() {
+    return rand(); // to make it longer
+  };
+
 
   useEffect(() => {
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_PUBLIC_KEY, {
       cluster: "mt1",
     });
 
-    const channel = pusher.subscribe("chat-gpt");
+    const subcribeId = `chat-gpt-${token()}`
+    setSubscribeId(subcribeId)
+    const channel = pusher.subscribe(subcribeId);
 
     channel.bind("api-response", function (data) {
       console.log("api-response")
-      console.log('data', data)
       setMessages((prevState) => prevState + data);
     });
 
     return () => {
-      pusher.unsubscribe("chat-gpt");
+      pusher.unsubscribe(subcribeId);
     };
   }, []);
 
@@ -44,10 +55,11 @@ const Home = () => {
     setLoading(true);
     const formData = new FormData();
     formData.append("file", file, file.name);
+    formData.append("token", subscribeId);
     try {
       const response = await fetch("/api/shrink", {
         method: "POST",
-        body: formData,
+        body: formData
       });
   
       if (response.ok) {

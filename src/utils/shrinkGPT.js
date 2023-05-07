@@ -1,7 +1,7 @@
 import { Transform } from 'stream';
 import { Configuration, OpenAIApi } from "openai";
 
-export const shrinkText = async function (inputText, channels) {
+export const shrinkText = async function (inputText, channels, token) {
   console.log('shrinkText function');
   return new Promise(async (resolve, reject) => {
     try {
@@ -37,7 +37,7 @@ export const shrinkText = async function (inputText, channels) {
                             if (delta.choices[0].delta.content) {
                                 const content = delta.choices[0].delta.content
                                 collectedMessages = collectedMessages + content
-                                channels.trigger('chat-gpt', 'api-response', content, () => {
+                                channels.trigger(token, 'api-response', content, () => {
                                     res.status(200).end('sent event successfully');
                                   });
                             }

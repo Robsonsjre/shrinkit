@@ -37,8 +37,6 @@ export default async function handler(req, res) {
     return;
   }
 
-  console.log('caiu aqui')
-
   try {
     await promisifiedUpload(req, res);
   } catch (error) {
@@ -60,7 +58,7 @@ export default async function handler(req, res) {
     let shrunkenChunks = [];
     for (let i = 0; i < chunks.length; i++) {
         const _chunk = chunks[i];
-        const shrunkenChunk = await shrinkText(_chunk, channels);
+        const shrunkenChunk = await shrinkText(_chunk, channels, req.body.token);
         shrunkenChunks.push(shrunkenChunk);
     }
     // shrunkenChunks = await Promise.all(
