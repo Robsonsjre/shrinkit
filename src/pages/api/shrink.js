@@ -1,6 +1,21 @@
 import processPDF from '../../utils/process';
 import { shrinkText } from '../../utils/shrinkGPT';
 import multer from 'multer';
+import Channels from 'pusher';
+
+const {
+  PUSHER_APP_ID: appId,
+  PUSHER_KEY: key,
+  PUSHER_SECRET: secret,
+  PUSHER_CLUSTER: cluster,
+} = process.env;
+
+const channels = new Channels({
+  appId,
+  key,
+  secret,
+  cluster,
+});
 
 const upload = multer({ storage: multer.memoryStorage() }).single('file');
 
@@ -45,7 +60,7 @@ export default async function handler(req, res) {
     let shrunkenChunks = [];
     for (let i = 0; i < chunks.length; i++) {
         const _chunk = chunks[i];
-        const shrunkenChunk = await shrinkText(_chunk);
+        const shrunkenChunk = await shrinkText(_chunk, channels);
         shrunkenChunks.push(shrunkenChunk);
     }
     // shrunkenChunks = await Promise.all(

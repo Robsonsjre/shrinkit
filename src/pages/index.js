@@ -1,17 +1,51 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from 'react';
 import Dropzone from 'react-dropzone';
+import Pusher from "pusher-js";
 
 const Home = () => {
   const [file, setFile] = useState(null);
   const [chunks, setChunks] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState([])
+  const [inputMessage, setInputMessage] = useState('')
+  const socketRef = useRef()
+
+  useEffect(() => {
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_PUBLIC_KEY, {
+      cluster: "mt1",
+    });
+
+    const channel = pusher.subscribe("chat-gpt");
+
+    channel.bind("api-response", function (data) {
+      console.log("api-response")
+      console.log(data)
+      setMessages((prevState) => [
+        ...prevState,
+        data,
+      ]);
+    });
+
+    return () => {
+      pusher.unsubscribe("chat-gpt");
+    };
+  }, []);
+
+  const sendMessage = (e) => {
+    console.log('sendMessage')
+    e.preventDefault()
+    if (inputMessage.trim() !== '') {
+      socketRef.current.emit('chat-message', inputMessage)
+      setInputMessage('')
+    }
+  }
+
 
   const handleDrop = (receivedFile) => {
     console.log('handleDrop')
     console.log(receivedFile[0])
     setFile(receivedFile[0]);
-  };
+  }
 
   const handleSubmit = async () => {
     if (!file) {
@@ -113,8 +147,27 @@ const Home = () => {
               </ul>
             </div>
           )}
+          <div className="bg-gray-100">
+      <h1 className="text-gray-900">Real-time Responses</h1>
+      <ul className="text-gray-900">
+        {messages.map((msg, i) => (
+          <li key={i}>{msg}</li>
+        ))}
+      </ul>
+      {/* <form onSubmit={sendMessage}>
+        <input
+          type="text"
+          value={inputMessage}
+          onChange={(e) => setInputMessage(e.target.value)}
+        />
+        <button 
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          type="submit">Send</button> 
+      </form> */}
+    </div>
         </div>
       </div>
+      
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { Transform } from 'stream';
 import { Configuration, OpenAIApi } from "openai";
 
-export const shrinkText = async function (inputText) {
+export const shrinkText = async function (inputText, channels) {
   console.log('shrinkText function');
   return new Promise(async (resolve, reject) => {
     try {
@@ -37,6 +37,9 @@ export const shrinkText = async function (inputText) {
                             if (delta.choices[0].delta.content) {
                                 const content = delta.choices[0].delta.content
                                 collectedMessages = collectedMessages + content
+                                channels.trigger('chat-gpt', 'api-response', content, () => {
+                                    res.status(200).end('sent event successfully');
+                                  });
                             }
                         } catch (error) {
                             console.log(`Error with JSON.parse and ${payload}.\n${error}`);
