@@ -6,7 +6,7 @@ const Home = () => {
   const [file, setFile] = useState(null);
   const [chunks, setChunks] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState('')
   const [inputMessage, setInputMessage] = useState('')
   const socketRef = useRef()
 
@@ -19,26 +19,14 @@ const Home = () => {
 
     channel.bind("api-response", function (data) {
       console.log("api-response")
-      console.log(data)
-      setMessages((prevState) => [
-        ...prevState,
-        data,
-      ]);
+      console.log('data', data)
+      setMessages((prevState) => prevState + data);
     });
 
     return () => {
       pusher.unsubscribe("chat-gpt");
     };
   }, []);
-
-  const sendMessage = (e) => {
-    console.log('sendMessage')
-    e.preventDefault()
-    if (inputMessage.trim() !== '') {
-      socketRef.current.emit('chat-message', inputMessage)
-      setInputMessage('')
-    }
-  }
 
 
   const handleDrop = (receivedFile) => {
@@ -130,30 +118,29 @@ const Home = () => {
             </div>
           )}
 
-          {chunks.length > 0 && (
+          {messages.length > 0 && (
             <div className="mt-8">
-              <p className="text-gray-700 text-lg leading-tight">
+              {/* <p className="text-gray-700 text-lg leading-tight">
                 Number of chunks: {chunks.length}
-              </p>
+              </p> */}
               <ul className="mt-4">
-                {chunks.map((chunk, index) => (
                   <li
-                    className="bg-white border border-gray-200 p-4 rounded-lg mt-2"
-                    key={index}
+                    className="text-gray-900 bg-white border border-gray-200 p-4 rounded-lg mt-2"
+                    key={1}
                   >
-                    {chunk}
+                    {messages}
                   </li>
                 ))}
               </ul>
             </div>
           )}
           <div className="bg-gray-100">
-      <h1 className="text-gray-900">Real-time Responses</h1>
-      <ul className="text-gray-900">
+      {/* <h1 className="text-gray-900">Real-time Shrinking</h1> */}
+      {/* <ul className="text-gray-900">
         {messages.map((msg, i) => (
           <li key={i}>{msg}</li>
         ))}
-      </ul>
+      </ul> */}
       {/* <form onSubmit={sendMessage}>
         <input
           type="text"
