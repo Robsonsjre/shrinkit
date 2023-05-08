@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import Dropzone from 'react-dropzone';
 import Pusher from "pusher-js";
 import { usePostHog } from 'posthog-js/react'
+import { push } from "@socialgouv/matomo-next";
+
+// track some events
 
 const Home = () => {
   const [file, setFile] = useState(null);
@@ -45,6 +48,7 @@ const Home = () => {
   const handleDrop = (receivedFile) => {
     console.log('handleDrop')
     posthog.capture('Selected PDF', { fileName: receivedFile[0].name })
+    push(["trackEvent", "contact", "Selected PDF"]);
     setFile(receivedFile[0]);
   }
 
@@ -54,7 +58,8 @@ const Home = () => {
       return;
     }
 
-    posthog.capture('Clicked to Generated Summary')
+    posthog.capture('Clicked to Generate Summary')
+    push(["trackEvent", "contact", "Clicked to Generate Summary"]);
 
     setLoading(true);
     const formData = new FormData();
