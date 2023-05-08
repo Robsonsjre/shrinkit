@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import posthog from 'posthog-js'
 import { PostHogProvider } from 'posthog-js/react'
 import { init } from "@socialgouv/matomo-next";
+import Footer from '../components/Footer';
 
 const MATOMO_URL = process.env.NEXT_PUBLIC_MATOMO_URL;
 const MATOMO_SITE_ID = process.env.NEXT_PUBLIC_MATOMO_SITE_ID;
@@ -37,9 +38,27 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <PostHogProvider client={posthog}>
-      <Component {...pageProps} />
+      <div className="app-wrapper bg-gray-100">
+        <Component {...pageProps} />
+        <Footer />
+      </div>
+      <style jsx global>{`
+    .app-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      justify-content: space-between;
+
+    }
+    .app-wrapper > :global(.page) {
+      flex: 1;
+    }
+  `}</style>
     </PostHogProvider>
+    
   )
+
+  
 }
 
 export default MyApp;

@@ -95,7 +95,7 @@ const Home = () => {
   // };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-gray-100" style={{flexGrow: 1}}>
       <div className="container mx-auto py-10">
         <div className="max-w-lg mx-auto">
           <div className="mb-8">
