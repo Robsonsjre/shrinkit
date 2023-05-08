@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Dropzone from 'react-dropzone';
 import Pusher from "pusher-js";
+import posthog from 'posthog-js'
+
+posthog.init('phc_aUOOyajS1kR3cyR6awBKQMYxqNAw5PJSiu1fDxmjcB4', { api_host: 'https://app.posthog.com' })
 
 const Home = () => {
   const [file, setFile] = useState(null);
@@ -42,7 +45,7 @@ const Home = () => {
 
   const handleDrop = (receivedFile) => {
     console.log('handleDrop')
-    console.log(receivedFile[0])
+    posthog.capture('upload_document', { property: { fileName: receivedFile[0].name } })
     setFile(receivedFile[0]);
   }
 
@@ -51,6 +54,8 @@ const Home = () => {
       alert("Please select a file before submitting.");
       return;
     }
+
+    posthog.capture('generate_summary', { property: 'handleSubmit' })
 
     setLoading(true);
     const formData = new FormData();
