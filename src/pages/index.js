@@ -142,7 +142,6 @@ const Home = () => {
                   >
                     {messages}
                   </li>
-                ))}
               </ul>
             </div>
           )}

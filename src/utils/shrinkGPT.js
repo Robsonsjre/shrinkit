@@ -10,10 +10,10 @@ export const shrinkText = async function (inputText, channels, token) {
           });
           const openai = new OpenAIApi(configuration);
           
-        const messageToSend = [
-            {role: "system", content: "Voce é uma assistente virtual que ajuda a resumir textos e simplificar a linguagem jurídica"},
-            {role: "user", content: `Parte do texto a ser resumida: ${inputText}`}
-        ]
+          const messageToSend = [
+            {role: "system", content: "You are a virtual assistant that helps summarize texts and simplify legal language"},
+            {role: "user", content: `Part of the text to be summarized: ${inputText}`}
+        ];
 
         const res = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
