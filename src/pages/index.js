@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Dropzone from 'react-dropzone';
 import Pusher from "pusher-js";
-import posthog from 'posthog-js'
-
-posthog.init('phc_aUOOyajS1kR3cyR6awBKQMYxqNAw5PJSiu1fDxmjcB4', { api_host: 'https://app.posthog.com' })
+import { usePostHog } from 'posthog-js/react'
 
 const Home = () => {
   const [file, setFile] = useState(null);
@@ -13,6 +11,7 @@ const Home = () => {
   const [inputMessage, setInputMessage] = useState('')
   const [subscribeId, setSubscribeId] = useState('')
   const socketRef = useRef()
+  const posthog = usePostHog()
 
   var rand = function() {
     return Math.random().toString(36).substr(2); // remove `0.`
@@ -45,7 +44,7 @@ const Home = () => {
 
   const handleDrop = (receivedFile) => {
     console.log('handleDrop')
-    posthog.capture('upload_document', { property: { fileName: receivedFile[0].name } })
+    posthog.capture('Selected PDF', { fileName: receivedFile[0].name })
     setFile(receivedFile[0]);
   }
 
@@ -55,7 +54,7 @@ const Home = () => {
       return;
     }
 
-    posthog.capture('generate_summary', { property: 'handleSubmit' })
+    posthog.capture('Clicked to Generated Summary')
 
     setLoading(true);
     const formData = new FormData();
